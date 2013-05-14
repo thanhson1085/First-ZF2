@@ -18,20 +18,6 @@ class DisTable
 
     public function getDis($id)
     {
-        $aws    = $this->getServiceLocator()->get('aws');
-        $client = $aws->get('dynamodb');
-		$iterator = $client->getIterator('Query', array(
-			'TableName' => 'errors',
-			'KeyConditions' => array(
-				'id' => array(
-					'AttributeValueList' => array(
-						array('N' => $id)
-					),
-					'ComparisonOperator' => 'EQ'
-				),
-			)
-		));
-		return $iterator;
     }
 
     public function saveDis(Dis $dis)

@@ -7,7 +7,6 @@ use Zend\View\Model\JsonModel;
 
 class DisController extends AbstractRestfulController 
 {
-    protected $disTable;
     public function getList()
     {
         return new JsonModel(array());
@@ -15,7 +14,20 @@ class DisController extends AbstractRestfulController
  
     public function get($id)
     {
-        return new JsonModel($this->getDisTable()->getDis($id));
+        $aws    = $this->getServiceLocator()->get('aws');
+        $client = $aws->get('dynamodb');
+        $iterator = $client->getIterator('Query', array(
+            'TableName' => 'errors',
+            'KeyConditions' => array(
+                'id' => array(
+                    'AttributeValueList' => array(
+                        array('N' => $id)
+                    ),
+                    'ComparisonOperator' => 'EQ'
+                ),
+            )
+        ));
+        return new JsonModel($iterator);
     }
  
     public function create($data)
@@ -28,13 +40,5 @@ class DisController extends AbstractRestfulController
  
     public function delete($id)
     {
-    }
-    public function getDisTable()
-    {
-        if (!$this->disTable){
-            $sm = $this->getServiceLocator();
-            $this->disTable = $sm->get('Dis\Model\DisTable');
-        }
-        return $this->disTable;
     }
 }
