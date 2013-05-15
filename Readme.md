@@ -2,7 +2,7 @@
 ## Built with [Zend Framework 2][1]
 
 ### AWS infrastructure
-* DynamoDB[2]
+* [DynamoDB][2]
 * EC2 Instance
 * Elasticache
 
